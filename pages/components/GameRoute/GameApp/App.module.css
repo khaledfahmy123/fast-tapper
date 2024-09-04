@@ -1,0 +1,99 @@
+
+.GameApp {
+  width: 100%;
+  height: 100%;
+}
+
+.GameApp > div {
+  height: 100vh;
+}
+
+.alert {
+  position: absolute;
+  top: 0;
+  z-index: 22;
+  width: 100%;
+  height: 100%;
+  background-color: #9dc1cd;
+  transition: all 0.3s ease;
+  display: grid;
+  padding: 3% 2%;
+  box-sizing: border-box;
+}
+
+.alert input {
+  width: 80%;
+  box-sizing: border-box;
+  font-size: clamp(0.5em, 5.5vw, 1.5rem);
+  padding: 3px 3px 3px 12px;
+}
+
+.alert label {
+  display: block;
+  font-size: 22px;
+  color: rgb(28, 28, 54);
+  font-weight: bold;
+  /* text-align: center; */
+  margin: 12px;
+  height: 25px;
+}
+
+.alert button {
+  width: 80%;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.cont {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+
+.cont div {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.cont video {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  height: 100%;
+}
+
+.red::-webkit-progress-value {
+  background: rgb(219, 81, 81);
+}
+.blue::-webkit-progress-bar {
+  background: rgb(97, 97, 223);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  /* background: rgba(15, 16, 29, 0.8); */
+  text-align: center;
+  line-height: 250px;
+  font-size: 35px;
+  color: #fff;
+}
+
+.overlay div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.blank {
+  background: rgba(0, 0, 0, 0.343);
+}
+
+.control {
+  margin: 20px 25px;
+}

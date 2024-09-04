@@ -1,0 +1,148 @@
+.component-spin {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  background-color: hsla(0, 0%, 100%, 0.9);
+}
+
+.command-text {
+  border: 1px solid #eee;
+  padding: 3px 6px;
+  color: #ccc;
+  border-radius: 3px;
+}
+
+.ant-spin-nested-loading > div > .ant-spin {
+  max-height: none !important;
+}
+
+.ant-spin-nested-loading {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.page-app {
+  width: 500px;
+  padding-top: 20px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ant-upload.ant-upload {
+  width: 500px;
+  padding: 10px;
+}
+
+.exec {
+  width: 500px;
+}
+
+.ant-input {
+  margin: 10px 0;
+}
+
+h4 {
+  margin-top: 20px;
+}
+
+.github-corner:hover .octo-arm {
+  animation: octocat-wave 560ms ease-in-out;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  font: tahoma;
+}
+
+* {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+  font-family: sans-serif;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  /* margin: 12px; */
+  overflow-y: scroll;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+button:focus {
+  color: #fff;
+  background: #1f3c68;
+}
+
+p {
+  font-family: tahoma;
+  font-size: 40px;
+  display: block;
+  margin: 12px auto;
+}
+
+progress {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 12px;
+  z-index: 3;
+}
+
+progress::-webkit-progress-value {
+  transition: 0.4s width ease-in-out;
+}
+
+progress::-webkit-progress-value {
+  -webkit-appearance: none;
+  white-space: pre;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(249, 255, 249, 0.78) inset;
+}
+
+progress::-webkit-progress-bar {
+  -webkit-appearance: none;
+  white-space: pre;
+  background: #ffffff;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.34) inset;
+}
+
+@keyframes octocat-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  20%,
+  60% {
+    transform: rotate(-25deg);
+  }
+  40%,
+  80% {
+    transform: rotate(10deg);
+  }
+}
+@media (max-width: 500px) {
+  .github-corner:hover .octo-arm {
+    animation: none;
+  }
+  .github-corner .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+  }
+}

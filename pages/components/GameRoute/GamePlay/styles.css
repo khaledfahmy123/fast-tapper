@@ -1,0 +1,263 @@
+html,
+body,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+img,
+ul,
+li,
+form,
+label,
+canvas,
+header,
+footer,
+menu,
+nav,
+section,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  font-weight: normal;
+  vertical-align: baseline;
+}
+header,
+footer,
+menu,
+nav,
+section {
+  display: block;
+}
+ol,
+ul {
+  list-style: none;
+}
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  line-height: 1;
+}
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  height: 64px;
+  width: 100%;
+}
+button {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: inherit;
+  text-transform: inherit;
+}
+.floating-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+  font-weight: 700;
+}
+h1 {
+  font-size: 32px;
+  font-weight: 900;
+}
+h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.number {
+  font-family: "Fugaz One";
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+/* ad container */
+.banner-container {
+  flex-shrink: 0;
+  display: flex;
+  position: relative;
+  height: 50px;
+  width: 100%;
+  background-color: white;
+  text-align: center;
+  z-index: 99;
+}
+.banner-container img {
+  height: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* nav */
+.nav-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* popups */
+.popup {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(24px);
+  z-index: 9;
+}
+.popup h1 {
+  color: deeppink;
+}
+.popup h2 {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.25;
+  text-align: center;
+}
+.popup-contents {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 24px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+.popup-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: yellow;
+  padding: 18px 12px 0 18px;
+}
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 48px 12px;
+  background: linear-gradient(to top, deeppink, yellow);
+  z-index: 1;
+}
+.popup-content-options {
+  width: 100%;
+}
+.popup-content-option {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 0 12px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+.popup-content-option:last-child {
+  margin: 0;
+}
+.popup-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+.popup-price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  width: 36px;
+  margin-right: 8px;
+  background-image: url("./img/coins.svg");
+  font-size: 12px;
+  color: maroon;
+}
+.popup-description {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.7);
+}
+.popup-footer {
+  display: flex;
+  align-items: center;
+  background-color: deeppink;
+  padding: 0 12px 12px;
+}
+.popup-footer button {
+  flex-shrink: 0;
+  flex-grow: 1;
+  background-color: yellow;
+  color: deeppink;
+}
+.close-popup-button,
+.popup-back-button {
+  position: absolute;
+  top: 12px;
+  height: 32px;
+  width: 32px;
+}
+.close-popup-button {
+  right: 12px;
+  background-image: url("./img/exit.svg");
+}
+.popup-back-button {
+  left: 12px;
+  background-image: url("./img/exit.svg");
+}
+
+/* universal info */
+.available-points {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 48px;
+  width: 100%;
+  padding-left: 56px;
+  padding-right: 12px;
+  background-image: url("./img/coin.svg");
+  background-position: left center;
+  background-repeat: no-repeat;
+  font-size: 14px;
+  color: white;
+}
+.available-points span {
+  font-size: 22px;
+  margin-bottom: 2px;
+}
