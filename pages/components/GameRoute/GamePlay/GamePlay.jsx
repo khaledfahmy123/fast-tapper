@@ -30,6 +30,7 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
 
   const progressHandler = () => {
     let val = (1 - ref.current.currentTime / ref.current.duration) * 100;
+
     prog.current.style.width = val + "%";
     if (
       !props.gameOver &&
@@ -53,8 +54,15 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
       props.flags.flag1 * 50 + props.flags.flag2 * 50 + props.flags.flag3 * 50
     );
 
-    if (ref.current.currentTime <= 0.5) {
-      setWin(true);
+    // if (ref.current.currentTime <= 0.5) {
+    //   setWin(true);
+    // }
+
+    if(val <10){
+      ref.current.currentTime = 2
+    }
+    if(val > 95){
+      ref.current.currentTime = 25
     }
   };
 
@@ -72,11 +80,11 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
   };
 
   useEffect(() => {
-    if (props.gameOver || win) {
-      ref.current.pause();
-      props.setTimerPlay(false);
-      console.log("lol paused");
-    }
+    // if (props.gameOver || win) {
+    //   ref.current.pause();
+    //   props.setTimerPlay(false);
+    //   console.log("lol paused");
+    // }
   }, [win, props.gameOver]);
 
   return (

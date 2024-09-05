@@ -8,6 +8,129 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 var cls = 0;
 
 const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
+  // State variables
+  const [tapCount, setTapCount] = useState(0);
+  const [lastTapTime, setLastTapTime] = useState(0);
+  const [tapRate, setTapRate] = useState(0);
+  const [recentTaps, setRecentTaps] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackDirection, setPlaybackDirection] = useState(0);
+
+  const vid = useRef();
+  const videoRef = vid;
+  const tapRateRef = useRef(tapRate);
+  const lastUpdateTimeRef = useRef(0);
+
+  const requiredTapRate = 5; // taps per second
+  const maxRecentTaps = 5;
+  const decayRate = 0.9;
+
+  useEffect(() => {
+    const handleClick = () => {
+      const currentTime = new Date().getTime();
+      if (lastTapTime !== 0) {
+        const timeDiff = currentTime - lastTapTime;
+        const instantRate = 1000 / timeDiff;
+        setRecentTaps((prevTaps) => {
+          const newTaps = [...prevTaps, instantRate];
+          if (newTaps.length > maxRecentTaps) {
+            newTaps.shift();
+          }
+          return newTaps;
+        });
+      }
+      setLastTapTime(currentTime);
+      setTapCount((prevCount) => prevCount + 1);
+
+      updateTapRate();
+      controlVideoPlayback();
+    };
+
+    document.body.addEventListener("click", handleClick);
+
+    return () => {
+      document.body.removeEventListener("click", handleClick);
+    };
+  }, [lastTapTime, maxRecentTaps]);
+
+  const updateTapRate = () => {
+    const currentTime = new Date().getTime();
+    
+    
+    const timeSinceLastUpdate =
+      (currentTime - lastUpdateTimeRef.current) / 1000;
+    lastUpdateTimeRef.current = currentTime;
+    
+    
+    recentTaps[recentTaps.length - 1] =
+      recentTaps[recentTaps.length - 1] *
+      Math.pow(decayRate, timeSinceLastUpdate);
+    
+    
+      // Method 1: Immediate Response with Decay
+    let newTapRate =
+      tapRateRef.current * Math.pow(decayRate, timeSinceLastUpdate);
+    if (recentTaps.length > 0) {
+      newTapRate = Math.max(newTapRate, recentTaps[recentTaps.length - 1]);
+    }
+
+    // Update state
+    setTapRate(newTapRate);
+    tapRateRef.current = newTapRate;
+
+    // document.getElementById("tap-rate").textContent = `Tap Rate: ${newTapRate.toFixed(2)} taps/second`;
+    console.log("Tap rate: ", newTapRate);
+  };
+
+  const controlVideoPlayback = () => {
+    if (!videoRef.current) return;
+
+    if (tapRate >= requiredTapRate) {
+      setPlaybackDirection(1);
+      if (!isPlaying) {
+        videoRef.current.play();
+        setIsPlaying(true);
+      }
+      videoRef.current.playbackRate = Math.min(2, tapRate / requiredTapRate);
+    } else if (tapRate > 0) {
+      setPlaybackDirection(1);
+      if (!isPlaying) {
+        videoRef.current.play();
+        setIsPlaying(true);
+      }
+      videoRef.current.playbackRate = 0.5;
+    } else {
+      setPlaybackDirection(-1);
+      if (isPlaying) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
+      videoRef.current.currentTime -= 0.1; // Move backward
+    }
+
+    updatePlaybackDirection();
+  };
+
+  const updatePlaybackDirection = () => {
+    const directionText =
+      playbackDirection === 1
+        ? "Forward"
+        : playbackDirection === -1
+        ? "Backward"
+        : "Paused";
+    // document.getElementById("playback-direction").textContent = `Playback: ${directionText}`;
+    console.log("Direction: ", directionText);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      updateTapRate();
+      controlVideoPlayback();
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [tapRate, isPlaying]);
+
   const [counter, setCounter] = useState(20.0);
   const [trig, setTrig] = useState(false);
   const [allow, setAllow] = useState(false);
@@ -24,53 +147,18 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
 
   let flagsPosition = ["20", "50", "80"];
 
-  const vid = useRef();
-
   const func1 = () => {
-    cls = 8;
-    if (counter <= 0) {
-      setTrig(true);
-    }
+    vid.current.currentTime = 3;
   };
 
-  const func2 = () => {
-    vid.current.currentTime = vid.current.currentTime - 1;
-  };
+  // useEffect(() => {
+  //   document.body.addEventListener("click", func1);
+  //   return () => document.body.removeEventListener("click", func1, true);
+  // });
 
-  useEffect(() => {
-    var timer;
-
-    if (counter > 0 || trig) {
-      timer = setInterval(() => {
-        setCounter(counter < 100 ? counter - 1 + cls : 100 - 1);
-      }, 100);
-    }
-
-    if (counter > 40) {
-      setAllow(true);
-    }
-
-    return () => {
-      clearInterval(timer);
-      setTrig(false);
-      setAllow(false);
-      cls = 0;
-    };
-  }, [counter, trig]);
-
-  useEffect(() => {
-    document.body.addEventListener("click", func1);
-    return () => document.body.removeEventListener("click", func1, true);
-  });
-
-  useEffect(() => {
-    if (allow) {
-      document.body.addEventListener("click", func2, true);
-    } else {
-      document.body.removeEventListener("click", func2, true);
-    }
-    return () => document.body.removeEventListener("click", func2, true);
-  }, [allow]);
+  // useEffect(() => {
+  //   vid.current.currentTime = 3;
+  // }, []);
 
   const loveHandler = () => {
     setLove((prev) => !prev);
@@ -84,7 +172,7 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
         return parseInt(prev) + 10;
       });
     } else {
-      setGameOver(true);
+      // setGameOver(true);
     }
   };
 
