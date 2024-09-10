@@ -10,16 +10,17 @@ import { Button } from "@mui/material";
 const GamePlay = forwardRef(function GamePlay(props, ref) {
   const prog = useRef();
 
+  const { vidRef, revRef, vidPoint } = ref;
+
   const { vidSrcForward, direction } = props;
 
   const [score, setScore] = useState(0);
   const [footage, setFootage] = useState(false);
   const [win, setWin] = useState(false);
 
-
   const openSettings = () => {
     $("#level-options").css({ transform: "scale(1)" });
-    ref.current.pause();
+    vidRef.current.pause();
     props.setTimerPlay(false);
   };
   const openPowerUp = () => {
@@ -30,17 +31,19 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
   };
 
   const progressHandler = () => {
-    let val = (ref.current.currentTime / ref.current.duration) * 100;
+    let val = (vidRef.current.currentTime / vidRef.current.duration) * 100;
+
+    vidPoint.current = vidRef.current.currentTime;
 
     prog.current.style.width = val + "%";
-    if (
-      !props.gameOver &&
-      ref.current.duration - ref.current.currentTime > 1 &&
-      !win
-    ) {
-      console.log("inside", ref.current.currentTime);
-      ref.current.play();
-    }
+    // if (
+    //   !props.gameOver &&
+    //   vidRef.current.duration - vidRef.current.currentTime > 1 &&
+    //   !win
+    // ) {
+    //   console.log("inside", vidRef.current.currentTime);
+    //   vidRef.current.play();
+    // }
     if (val >= 80) {
       props.setFlags({ flag1: true, flag2: true, flag3: true });
     } else if (val >= 50) {
@@ -62,9 +65,48 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
     // if (val < 10) {
     //   ref.current.currentTime = 15;
     // }
-    if (val > 95) {
-      ref.current.currentTime = 2;
+    // if (val > 95) {
+    //   vidRef.current.currentTime = 2;
+    // }
+  };
+  const progressRevHandler = () => {
+    let val = (1 - revRef.current.currentTime / revRef.current.duration) * 100;
+
+    vidPoint.current = revRef.current.duration - revRef.current.currentTime;
+
+    prog.current.style.width = val + "%";
+    // if (
+    //   !props.gameOver &&
+    //   revRef.current.duration - revRef.current.currentTime > 1 &&
+    //   !win
+    // ) {
+    //   // console.log("inside", revRef.current.currentTime);
+    //   revRef.current.play();
+    // }
+    if (val >= 80) {
+      props.setFlags({ flag1: true, flag2: true, flag3: true });
+    } else if (val >= 50) {
+      props.setFlags({ flag1: true, flag2: true, flag3: false });
+    } else if (val >= 20) {
+      props.setFlags({ flag1: true, flag2: false, flag3: false });
+    } else {
+      props.setFlags({ flag1: false, flag2: false, flag3: false });
     }
+
+    setScore(
+      props.flags.flag1 * 50 + props.flags.flag2 * 50 + props.flags.flag3 * 50
+    );
+
+    // if (vidRef.current.currentTime <= 0.1) {
+    //   revRef.current.pause()
+    // }
+
+    // if (val < 10) {
+    //   ref.current.currentTime = 15;
+    // }
+    // if (val > 95) {
+    //   revRef.current.currentTime = 25;
+    // }
   };
 
   const loveHandler = () => {
@@ -94,20 +136,27 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
         <div id="example-video">
           <video
             muted
-            ref={ref}
+            ref={revRef}
+            style={{
+              opacity: direction > 0 ? "0" : "1",
+              display: direction > 0 ? "none" : "block",
+            }}
+            src={props.vidSrc}
+            onTimeUpdate={progressRevHandler}
+            type="video/mp4"
+          ></video>
+          <video
+            muted
+            ref={vidRef}
             onTimeUpdate={progressHandler}
             src={props.vidSrcForward}
             type="video/mp4"
-            // style={{ opacity: direction < 0 ? "0" : "1", display: direction < 0? "none" : "block" }}
+            style={{
+              opacity: direction < 0 ? "0" : "1",
+              display: direction < 0 ? "none" : "block",
+            }}
+            autoPlay
           ></video>
-          {/* <video
-          muted
-          // ref={ref}
-            style={{ opacity: direction > 0 ? "0" : "1", display: direction > 0? "none" : "block" }}
-            src={props.vidSrc}
-            onTimeUpdate={progressHandler}
-            type="video/mp4"
-          ></video> */}
         </div>
         {/* <div id="example-video" style={{opacity: direction > 0? "0" : "1"}}>
           
@@ -175,7 +224,7 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
               onClick={(e) => {
                 e.target.parentElement.parentElement.style.transform =
                   "scale(0)";
-                ref.current.play();
+                vidRef.current.play();
                 props.setTimerPlay(true);
               }}
             >

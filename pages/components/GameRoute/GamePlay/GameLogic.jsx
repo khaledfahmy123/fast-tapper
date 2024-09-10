@@ -13,11 +13,12 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
   const [lastTapTime, setLastTapTime] = useState(0);
   const [tapRate, setTapRate] = useState(0);
   const [recentTaps, setRecentTaps] = useState([]);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [playbackDirection, setPlaybackDirection] = useState(0);
 
   const vid = useRef();
-  // const vidRev = useRef();
+  const vidRev = useRef();
+  const vidPoint = useRef();
   const videoRef = vid;
   const tapRateRef = useRef(tapRate);
   const lastUpdateTimeRef = useRef(0);
@@ -77,53 +78,79 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
     tapRateRef.current = newTapRate;
 
     // document.getElementById("tap-rate").textContent = `Tap Rate: ${newTapRate.toFixed(2)} taps/second`;
-    console.log("Tap rate: ", newTapRate);
+    // console.log("Tap rate: ", newTapRate);
+    // let vidLength = vid.current.duration || 0;
+    // if (playbackDirection > 0) {
+    //   vidRev.current.currentTime = vidLength - vid.current.currentTime || 0;
+    // } else {
+    //   vid.current.currentTime = vidLength - vidRev.current.currentTime || 0;
+    // }
   };
 
   const controlVideoPlayback = () => {
     if (!videoRef.current) return;
 
-    if (tapRate >= requiredTapRate) {
+    if (tapRate >= requiredTapRate * 1.2) {
       setPlaybackDirection(1);
       if (!isPlaying) {
-        videoRef.current.play();
+        vid.current.currentTime = vidPoint.current
+        vid.current.play();
+        vidRev.current.pause();
         setIsPlaying(true);
       }
-      videoRef.current.playbackRate = Math.min(2, tapRate / requiredTapRate);
-      console.log("Video Rate: ", videoRef.current.playbackRate)
-    }
-     else if (tapRate > (0.7 * requiredTapRate)) {
+      vid.current.playbackRate = Math.min(2, tapRate / requiredTapRate);
+    } else if (tapRate >= requiredTapRate) {
       setPlaybackDirection(1);
-      
-      videoRef.current.playbackRate = Math.min(2, tapRate / requiredTapRate);
-    }
-    else {
+      if (!isPlaying) {
+        vid.current.currentTime = vidPoint.current
+        vid.current.play();
+        vidRev.current.pause();
+        setIsPlaying(true);
+      }
+
+      vid.current.playbackRate = Math.min(2, tapRate / requiredTapRate);
+    } else {
       setPlaybackDirection(-1);
-      // if (isPlaying) {
-      //   videoRef.current.pause();
-      //   setIsPlaying(false);
-      // }
-      videoRef.current.currentTime -= 0.1; // Move backward
+      if (isPlaying) {
+        vidRev.current.currentTime = vid.current.duration - vidPoint.current || 0
+        vid.current.pause();
+        vidRev.current.play();
+        setIsPlaying(false);
+      }
+      // videoRef.current.currentTime -= 0.1; // Move backward
+      vidRev.current.playbackRate = 1;
     }
+    // console.log(`Length: ${vidLength - vidRev.current.currentTime || 0}`);
+    console.log("Video Rate: ", vid.current.playbackRate);
+    console.log("Video Time: ", vid.current.currentTime);
+    console.log("Reveo Rate: ", vidRev.current.playbackRate);
+    console.log("Reveo Time: ", vidRev.current.currentTime);
 
-    updatePlaybackDirection();
+    // updatePlaybackDirection();
   };
 
-  const updatePlaybackDirection = () => {
-    const directionText =
-      playbackDirection === 1
-        ? "Forward"
-        : playbackDirection === -1
-        ? "Backward"
-        : "Paused";
-    // document.getElementById("playback-direction").textContent = `Playback: ${directionText}`;
-    console.log("Direction: ", directionText);
+  var refGlobe = {
+    vidRef: vid,
+    revRef: vidRev,
+    vidPoint: vidPoint,
   };
+
+  // const updatePlaybackDirection = () => {
+  //   const directionText =
+  //     playbackDirection === 1
+  //       ? "Forward"
+  //       : playbackDirection === -1
+  //       ? "Backward"
+  //       : "Paused";
+  //   // document.getElementById("playback-direction").textContent = `Playback: ${directionText}`;
+  //   console.log("Direction: ", directionText);
+  // };
 
   useEffect(() => {
     const interval = setInterval(() => {
       updateTapRate();
       controlVideoPlayback();
+      console.log("Status Playing: ", !vid.current.paused);
     }, 100);
 
     return () => clearInterval(interval);
@@ -179,11 +206,22 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
       setTimer(time);
       setTimerPlay(true);
       console.log(vidSrc);
-      // vid.current.currentTime = 2;
-      vid.current.play();
+      // vid.current.currentTime = 20;
+      // vid.current.play();
       console.log(time);
     }
   }, [start, vidSrc]);
+
+  // useEffect(() => {
+  //   let vidLength = vid.current.duration || 0;
+  //   if (playbackDirection > 0) {
+  //     vidRev.current.currentTime = vidLength - vid.current.currentTime || 0;
+  //   }
+
+  //   if (playbackDirection < 0) {
+  //     vid.current.currentTime = vidLength - vidRev.current.currentTime || 0;
+  //   }
+  // }, [playbackDirection, timer]);
 
   useEffect(() => {
     document.body.style.background = "#000";
@@ -192,7 +230,7 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
   return (
     <>
       <GamePlay
-        ref={vid}
+        ref={refGlobe}
         // revRef={vidRev}
         love={love}
         loveHandler={loveHandler}
