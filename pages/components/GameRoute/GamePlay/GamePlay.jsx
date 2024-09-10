@@ -10,11 +10,12 @@ import { Button } from "@mui/material";
 const GamePlay = forwardRef(function GamePlay(props, ref) {
   const prog = useRef();
 
+  const { vidSrcForward, direction } = props;
+
   const [score, setScore] = useState(0);
   const [footage, setFootage] = useState(false);
   const [win, setWin] = useState(false);
 
-  // window.document.body.style.background = "#000";
 
   const openSettings = () => {
     $("#level-options").css({ transform: "scale(1)" });
@@ -29,7 +30,7 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
   };
 
   const progressHandler = () => {
-    let val = (1 - ref.current.currentTime / ref.current.duration) * 100;
+    let val = (ref.current.currentTime / ref.current.duration) * 100;
 
     prog.current.style.width = val + "%";
     if (
@@ -58,11 +59,11 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
     //   setWin(true);
     // }
 
-    if(val <10){
-      ref.current.currentTime = 2
-    }
-    if(val > 95){
-      ref.current.currentTime = 25
+    // if (val < 10) {
+    //   ref.current.currentTime = 15;
+    // }
+    if (val > 95) {
+      ref.current.currentTime = 2;
     }
   };
 
@@ -95,10 +96,23 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
             muted
             ref={ref}
             onTimeUpdate={progressHandler}
-            src={props.vidSrc}
+            src={props.vidSrcForward}
             type="video/mp4"
+            // style={{ opacity: direction < 0 ? "0" : "1", display: direction < 0? "none" : "block" }}
           ></video>
+          {/* <video
+          muted
+          // ref={ref}
+            style={{ opacity: direction > 0 ? "0" : "1", display: direction > 0? "none" : "block" }}
+            src={props.vidSrc}
+            onTimeUpdate={progressHandler}
+            type="video/mp4"
+          ></video> */}
         </div>
+        {/* <div id="example-video" style={{opacity: direction > 0? "0" : "1"}}>
+          
+        </div> */}
+
         <div className="gradient-overlays" />
         <div className="top-elements-container">
           <div id="timer" className="number">

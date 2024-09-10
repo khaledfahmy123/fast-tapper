@@ -17,6 +17,7 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
   const [playbackDirection, setPlaybackDirection] = useState(0);
 
   const vid = useRef();
+  // const vidRev = useRef();
   const videoRef = vid;
   const tapRateRef = useRef(tapRate);
   const lastUpdateTimeRef = useRef(0);
@@ -55,19 +56,16 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
 
   const updateTapRate = () => {
     const currentTime = new Date().getTime();
-    
-    
+
     const timeSinceLastUpdate =
       (currentTime - lastUpdateTimeRef.current) / 1000;
     lastUpdateTimeRef.current = currentTime;
-    
-    
+
     recentTaps[recentTaps.length - 1] =
       recentTaps[recentTaps.length - 1] *
       Math.pow(decayRate, timeSinceLastUpdate);
-    
-    
-      // Method 1: Immediate Response with Decay
+
+    // Method 1: Immediate Response with Decay
     let newTapRate =
       tapRateRef.current * Math.pow(decayRate, timeSinceLastUpdate);
     if (recentTaps.length > 0) {
@@ -92,19 +90,19 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
         setIsPlaying(true);
       }
       videoRef.current.playbackRate = Math.min(2, tapRate / requiredTapRate);
-    } else if (tapRate > 0) {
+      console.log("Video Rate: ", videoRef.current.playbackRate)
+    }
+     else if (tapRate > (0.7 * requiredTapRate)) {
       setPlaybackDirection(1);
-      if (!isPlaying) {
-        videoRef.current.play();
-        setIsPlaying(true);
-      }
-      videoRef.current.playbackRate = 0.5;
-    } else {
+      
+      videoRef.current.playbackRate = Math.min(2, tapRate / requiredTapRate);
+    }
+    else {
       setPlaybackDirection(-1);
-      if (isPlaying) {
-        videoRef.current.pause();
-        setIsPlaying(false);
-      }
+      // if (isPlaying) {
+      //   videoRef.current.pause();
+      //   setIsPlaying(false);
+      // }
       videoRef.current.currentTime -= 0.1; // Move backward
     }
 
@@ -181,11 +179,11 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
       setTimer(time);
       setTimerPlay(true);
       console.log(vidSrc);
-      vid.current.currentTime = vid.current.duration || 5;
+      // vid.current.currentTime = 2;
       vid.current.play();
       console.log(time);
     }
-  }, [start, time, vidSrc]);
+  }, [start, vidSrc]);
 
   useEffect(() => {
     document.body.style.background = "#000";
@@ -195,6 +193,7 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
     <>
       <GamePlay
         ref={vid}
+        // revRef={vidRev}
         love={love}
         loveHandler={loveHandler}
         setFlags={setFlags}
@@ -204,6 +203,7 @@ const GameLogic = ({ start, time, vidSrc, vidSrcForward }) => {
         gameOver={gameOver}
         vidSrc={vidSrc}
         vidSrcForward={vidSrcForward}
+        direction={playbackDirection}
         speedMeter={
           <div
             style={{
