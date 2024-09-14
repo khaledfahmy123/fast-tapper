@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createFFmpeg, fetchFile, FFmpeg } from "@ffmpeg/ffmpeg";
 import { InboxOutlined } from "@ant-design/icons";
 // import numerify from "numerify/lib/index.cjs";
-import Progress from "../components/Steps/Progress";
+import Progress from "../../components/Steps/Progress";
 import { saveVideoForSession } from "../../utils/app/saveVid";
 import React from "react";
 import assert from "assert";

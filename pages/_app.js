@@ -1,8 +1,8 @@
 // import "antd/dist/antd.min.css";
 import "./app/index.css";
-import "./components/GameRoute/GamePlay/styles.css";
-import "./components/GameRoute/GamePlay/devStyle.css";
-import "./components/GameRoute/GamePlay/game.css";
+import "/components/GameRoute/GamePlay/styles.css";
+import "/components/GameRoute/GamePlay/devStyle.css";
+import "/components/GameRoute/GamePlay/game.css";
 import Script from "next/script";
 import { useEffect } from "react";
 import { openDB } from "idb";
