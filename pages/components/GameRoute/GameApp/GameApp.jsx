@@ -8,9 +8,10 @@ import GameLogic from "../GamePlay/GameLogic";
 function GameApp() {
   const [videoSrc, setVideoSrc] = useState();
   const [videoRevSrc, setVideoRevSrc] = useState();
-  const [RTP, setRTP] = useState(2);
+  const [maxFing, setMaxFing] = useState(2);
   const [time, setTime] = useState(0);
   const [start, setStart] = useState(false);
+  const [requiredTapRate, setRequiredTapRate] = useState(5)
 
   const getVideoDuration = (videoUrl) => {
     return new Promise((resolve, reject) => {
@@ -58,8 +59,8 @@ function GameApp() {
       });
   };
 
-  const inputHandler = (time, rtp) => {
-    setRTP(rtp);
+  const inputHandler = (time, maxFing) => {
+    setMaxFing(maxFing);
     setTime(time);
   };
 
@@ -71,6 +72,7 @@ function GameApp() {
         setVidHandler={videoHandler}
         setStart={setStart}
         time={time}
+        setRequiredTapRate={setRequiredTapRate}
       />
       {/* <Game
         // videoSrc={require("../../vid.mp4")}
@@ -87,6 +89,8 @@ function GameApp() {
         time={time}
         start={start}
         vidSrcForward={videoSrc}
+        requiredTapRate={requiredTapRate}
+        maxFingers={maxFing}
       />
     </div>
   );

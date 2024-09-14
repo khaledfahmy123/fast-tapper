@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -11,7 +12,7 @@ import { FormControl, FormLabel } from "@mui/material";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import { useRef } from "react";
 import FullScreenDialog from "../Dialog/Dialog";
-import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
+import OfflineBoltIcon from "@mui/icons-material/OfflineBolt";
 
 export default function StartMenuLayout({
   startGame,
@@ -19,20 +20,27 @@ export default function StartMenuLayout({
   setVidHandler,
   setRevHandler,
   timeVal,
+  setRequiredTapRate,
 }) {
   const time = useRef();
   const rtr = useRef();
+  const [minTapRate, setMinTapRate] = useState(5);
 
   const startHandler = (e) => {
     e.preventDefault();
     startGame(time.current.value, rtr.current.value);
   };
 
-  const [age, setAge] = React.useState('');
+  const [age, setAge] = React.useState("");
 
   const handleChange = (event) => {
     setAge(event.target.value);
   };
+
+  useEffect(() => {
+    setRequiredTapRate(minTapRate);
+    console.log(minTapRate)
+  }, [minTapRate]);
 
   return (
     <form onSubmit={startHandler}>
@@ -76,7 +84,11 @@ export default function StartMenuLayout({
           />
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <OfflineBoltIcon sx={{ mr: 1, my: 0.5 }} color="primary" variant={"outlined"} />
+          <OfflineBoltIcon
+            sx={{ mr: 1, my: 0.5 }}
+            color="primary"
+            variant={"outlined"}
+          />
           <Select
             color="primary"
             labelId="demo-simple-select-standard-label"
@@ -89,12 +101,12 @@ export default function StartMenuLayout({
               width: "100%",
               color: "black",
               height: "40px",
-              textAlign: "left"
+              textAlign: "left",
             }}
           >
             <MenuItem value={0}>Algorithm 1</MenuItem>
-            <MenuItem value={1}>Algorithm 2</MenuItem>
-            <MenuItem value={2}>Algorithm 3</MenuItem>
+            {/* <MenuItem value={1}>Algorithm 2</MenuItem> */}
+            {/* <MenuItem value={2}>Algorithm 3</MenuItem> */}
           </Select>
         </Box>
         <Box
@@ -110,8 +122,28 @@ export default function StartMenuLayout({
             variant="standard"
             sx={{ width: "100%" }}
             type="number"
+            // inputRef={rtr}
+            required
+            value={minTapRate}
+            onChange={(val) => setMinTapRate(val.target.value)}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-end",
+          }}
+        >
+          <TouchAppIcon sx={{ mr: 1, my: 0.5 }} color="primary" />
+          <TextField
+            id="input-with-sx"
+            label="Max Fingers"
+            variant="standard"
+            sx={{ width: "100%" }}
+            type="number"
             inputRef={rtr}
             required
+            defaultValue={1}
           />
         </Box>
         <Box

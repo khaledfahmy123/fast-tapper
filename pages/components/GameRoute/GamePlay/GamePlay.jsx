@@ -21,6 +21,7 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
   const openSettings = () => {
     $("#level-options").css({ transform: "scale(1)" });
     vidRef.current.pause();
+    revRef.current.pause();
     props.setTimerPlay(false);
   };
   const openPowerUp = () => {
@@ -36,14 +37,11 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
     vidPoint.current = vidRef.current.currentTime;
 
     prog.current.style.width = val + "%";
-    // if (
-    //   !props.gameOver &&
-    //   vidRef.current.duration - vidRef.current.currentTime > 1 &&
-    //   !win
-    // ) {
-    //   console.log("inside", vidRef.current.currentTime);
-    //   vidRef.current.play();
-    // }
+    if (props.gameOver || win) {
+      console.log("inside", vidRef.current.currentTime);
+      vidRef.current.pause();
+      revRef.current.pause();
+    }
     if (val >= 80) {
       props.setFlags({ flag1: true, flag2: true, flag3: true });
     } else if (val >= 50) {
@@ -58,9 +56,9 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
       props.flags.flag1 * 50 + props.flags.flag2 * 50 + props.flags.flag3 * 50
     );
 
-    // if (ref.current.currentTime <= 0.5) {
-    //   setWin(true);
-    // }
+    if (vidRef.current.currentTime >= vidRef.current.duration) {
+      setWin(true);
+    }
 
     // if (val < 10) {
     //   ref.current.currentTime = 15;
@@ -75,14 +73,12 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
     vidPoint.current = revRef.current.duration - revRef.current.currentTime;
 
     prog.current.style.width = val + "%";
-    // if (
-    //   !props.gameOver &&
-    //   revRef.current.duration - revRef.current.currentTime > 1 &&
-    //   !win
-    // ) {
-    //   // console.log("inside", revRef.current.currentTime);
-    //   revRef.current.play();
-    // }
+
+    if (props.gameOver || win) {
+      console.log("inside", vidRef.current.currentTime);
+      vidRef.current.pause();
+      revRef.current.pause();
+    }
     if (val >= 80) {
       props.setFlags({ flag1: true, flag2: true, flag3: true });
     } else if (val >= 50) {
@@ -123,11 +119,12 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
   };
 
   useEffect(() => {
-    // if (props.gameOver || win) {
-    //   ref.current.pause();
-    //   props.setTimerPlay(false);
-    //   console.log("lol paused");
-    // }
+    if (props.gameOver || win) {
+      vidRef.current.pause();
+      revRef.current.pause();
+      props.setTimerPlay(false);
+      console.log("lol paused");
+    }
   }, [win, props.gameOver]);
 
   return (
@@ -225,6 +222,7 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
                 e.target.parentElement.parentElement.style.transform =
                   "scale(0)";
                 vidRef.current.play();
+                revRef.current.pause();
                 props.setTimerPlay(true);
               }}
             >

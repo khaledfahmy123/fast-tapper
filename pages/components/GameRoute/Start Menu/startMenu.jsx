@@ -16,6 +16,7 @@ const StartMenu = ({
   setRevHandler,
   setStart,
   time,
+  setRequiredTapRate,
 }) => {
   const alert = useRef();
 
@@ -96,6 +97,7 @@ const StartMenu = ({
           setVidHandler={setVidHandler}
           setRevHandler={setRevHandler}
           timeVal={time}
+          setRequiredTapRate={setRequiredTapRate}
         />
       </div>
     </>
