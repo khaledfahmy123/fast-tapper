@@ -6,6 +6,9 @@ const Progress = ({ step }) => (
     progressDot
     direction="horizontal"
     current={step}
+    style={{
+      paddingLeft: "12px"
+    }}
     items={[
       {
         title: "Upload",

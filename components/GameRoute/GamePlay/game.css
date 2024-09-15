@@ -41,12 +41,12 @@
 #example-video {
   height: 100%;
   width: 100%;
-  background-color: white;
+  background-color: black;
 }
 #example-video video {
   height: 100%;
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 /* game info sections */

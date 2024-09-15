@@ -1,7 +1,7 @@
 import GameApp from "../../components/GameRoute/GameApp/GameApp.jsx";
 import React from "react";
-const About = () => {
+const Game = () => {
   return <GameApp />;
 };
 
-export default About;
+export default Game;

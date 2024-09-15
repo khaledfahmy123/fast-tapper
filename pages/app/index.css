@@ -29,7 +29,7 @@
 }
 
 .page-app {
-  width: 500px;
+  max-width: 500px;
   padding-top: 20px;
   margin: 0 auto;
   display: flex;
@@ -37,13 +37,19 @@
   gap: 20px;
 }
 
+@media only screen and (max-width: 600px) {
+  .page-app {
+    padding: 12px;
+    height: calc(var(--vh, 1vh) * 100);
+  }
+}
 .ant-upload.ant-upload {
-  width: 500px;
+  max-width: 500px;
   padding: 10px;
 }
 
 .exec {
-  width: 500px;
+  max-width: 500px;
 }
 
 .ant-input {
