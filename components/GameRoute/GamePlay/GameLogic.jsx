@@ -70,9 +70,9 @@ const GameLogic = ({
         setActiveFingers(activeTouches);
       }
       console.log("lol: ", maxFingers);
-      if (activeTouches > maxFingers) {
-        alert(`You're only allowed to use ${maxFingers} fingers`);
-      }
+      // if (activeTouches > maxFingers) {
+      //   alert(`You're only allowed to use ${maxFingers} fingers`);
+      // }
     };
 
     document.body.addEventListener("touchstart", handleTouch);
