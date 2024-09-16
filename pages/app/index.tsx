@@ -1,5 +1,14 @@
 "use client";
-import { Spin, Upload, Input, Button, message } from "antd";
+import {
+  Spin,
+  Upload,
+  Input,
+  Button,
+  message,
+  Flex,
+  Radio,
+  Typography,
+} from "antd";
 import { useEffect, useRef, useState } from "react";
 import { createFFmpeg, fetchFile, FFmpeg } from "@ffmpeg/ffmpeg";
 import { InboxOutlined } from "@ant-design/icons";
@@ -9,7 +18,9 @@ import { saveVideoForSession } from "../../utils/app/saveVid";
 import React from "react";
 import assert from "assert";
 import { useRouter } from "next/router";
-
+import JSZip from "jszip";
+import { Group } from "antd/es/avatar";
+import { error } from "console";
 const { Dragger } = Upload;
 
 const App = () => {
@@ -19,6 +30,7 @@ const App = () => {
   const [fileList, setFileList] = useState<File[]>([]);
   const [name, setName] = useState("input.mp4");
   const [step, setStep] = useState<number>(0);
+  const [processor, setProcessor] = useState<string>("client");
   const ffmpeg = useRef<FFmpeg>();
   const currentFSls = useRef<string[]>([]);
 
@@ -68,6 +80,8 @@ const App = () => {
         "areverse",
         "rev.mp4"
       );
+      console.log("Video processing completed successfully.");
+
       setSpinning(false);
       const FSls = ffmpeg.current.FS("readdir", ".");
       const outputFiles = FSls.filter((i) => !currentFSls.current.includes(i));
@@ -81,12 +95,45 @@ const App = () => {
         }
 
         message.success("Run successfully, You're ready to start the game", 10);
-        setStep((prev) => prev + 1);
+        setStep(2);
       } else {
         message.success("Error uploading the file", 10);
       }
     } catch (err) {
       console.error(err);
+      setSpinning(false);
+      message.error("Failed to run, Please try again with smaller video", 10);
+    }
+  };
+
+  const handleApi = async () => {
+    assert(file != undefined, "File Not Uploaded Correctly");
+    const formData = new FormData();
+    formData.append("file", file);
+    setTip("Wait a second...");
+    setSpinning(true);
+    const response = await fetch("http://localhost:3000/api/video", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      setSpinning(false);
+
+      const blob = await response.blob();
+      const zip = new JSZip();
+      const unzipped = await zip.loadAsync(blob);
+
+      const forwardVid = await unzipped.file("forward.mp4")?.async("blob");
+
+      const reverseVid = await unzipped.file("reverse.mp4")?.async("blob");
+
+      saveVideoForSession(forwardVid, true);
+      saveVideoForSession(reverseVid, false);
+      message.success("Run successfully, You're ready to start the game", 10);
+      setStep(2);
+    } else {
+      setSpinning(false);
       message.error("Failed to run, Please try again with smaller video", 10);
     }
   };
@@ -100,7 +147,17 @@ const App = () => {
       });
       ffmpeg.current.setProgress(({ ratio }) => {
         console.log(ratio);
-        setTip(Math.round(ratio * 100).toFixed(1));
+        setTip(Math.round(ratio * 100) + "%");
+      });
+
+      ffmpeg.current.setLogger(({ type, message: msg }) => {
+        if (msg.includes("error")) {
+          setSpinning(false);
+          message.error(
+            "Failed to run, Please try again with smaller video",
+            10
+          );
+        }
       });
       setTip("ffmpeg static resource loading...");
       setSpinning(true);
@@ -111,7 +168,7 @@ const App = () => {
 
   useEffect(() => {
     if (fileList.length > 0) {
-      setStep((prev) => prev + 1);
+      setStep(1);
     }
   }, [fileList]);
 
@@ -122,7 +179,6 @@ const App = () => {
           <div className="component-spin" />
         </Spin>
       )}
-
       <h2
         style={{
           marginBottom: "30px",
@@ -147,17 +203,59 @@ const App = () => {
         </p>
         <p className="ant-upload-text">Click or drag file</p>
       </Dragger>
-      <p style={{ color: "gray" }}>
-        Your files will not be uploaded to the server, only processed in the
-        browser
-      </p>
 
+      <Group
+        style={{
+          flexDirection: "column",
+          justifyContent: "center",
+          alignContent: "center",
+          border: "2px dashed #00000044",
+          padding: "50px 15px",
+          borderRadius: "12px",
+          gap: "12px",
+          marginTop: "15px",
+        }}
+      >
+        <Typography.Text style={{ fontSize: "18px", textAlign: "center" }}>
+          How would you like your video to be processed?
+        </Typography.Text>
+        <Flex vertical gap="middle" justify="center" align="center">
+          <Radio.Group
+            defaultValue="client"
+            buttonStyle="solid"
+            style={{ width: "100%" }}
+            onChange={(e) => setProcessor(e.target.value)}
+            value={processor}
+          >
+            <Radio.Button
+              value="server"
+              style={{ width: "50%", textAlign: "center" }}
+            >
+              Server Side
+            </Radio.Button>
+            <Radio.Button
+              value="client"
+              style={{ width: "50%", textAlign: "center" }}
+            >
+              Client Side
+            </Radio.Button>
+          </Radio.Group>
+        </Flex>
+
+        <p style={{ color: "gray", textAlign: "center" }}>
+          Your files will not be saved in the server, It is processed on the fly
+          and discarded afterwards.
+        </p>
+      </Group>
       <br />
       <br />
-      <Button type="primary" disabled={step != 1} onClick={handleExec}>
+      <Button
+        type="primary"
+        disabled={step != 1}
+        onClick={processor === "server" ? handleApi : handleExec}
+      >
         Compile The Video
       </Button>
-
       <Button
         type="primary"
         disabled={step < 2}
@@ -167,6 +265,7 @@ const App = () => {
       >
         Go to game
       </Button>
+      {/* <video src={videoUrl} controls></video> */}
     </div>
   );
 };
