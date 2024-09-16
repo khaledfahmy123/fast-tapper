@@ -112,10 +112,13 @@ const App = () => {
     formData.append("file", file);
     setTip("Wait a second...");
     setSpinning(true);
-    const response = await fetch("http://localhost:3000/api/video", {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/video`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
     if (response.ok) {
       setSpinning(false);
