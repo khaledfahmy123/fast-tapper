@@ -26,6 +26,9 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
   };
   const openPowerUp = () => {
     $("#purchase-booster").css({ display: "flex" });
+    vidRef.current.pause();
+    revRef.current.pause();
+    props.setTimerPlay(false);
   };
   const confirmQuit = () => {
     $("#quit-confirmation").css({ display: "flex" });
@@ -155,14 +158,22 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
             autoPlay
           ></video>
         </div>
-        {/* <div id="example-video" style={{opacity: direction > 0? "0" : "1"}}>
-          
-        </div> */}
 
         <div className="gradient-overlays" />
         <div className="top-elements-container">
           <div id="timer" className="number">
             {props.timer}
+          </div>
+          <div style={{
+            background:"white",
+            fontSize: "22px",
+            height: "fit-content",
+            padding: "7px",
+            borderRadius: "12px",
+            margin: "12px",
+            fontFamily: "tahoma"
+          }}>
+            {props.activeFingers}/{props.maxFingers}
           </div>
           <button
             id="pause"

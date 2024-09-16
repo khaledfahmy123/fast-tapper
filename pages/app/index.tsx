@@ -162,7 +162,7 @@ const App = () => {
         type="primary"
         disabled={step < 2}
         onClick={() => {
-          router.push("/about");
+          router.push("/game");
         }}
       >
         Go to game

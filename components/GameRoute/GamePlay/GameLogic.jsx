@@ -22,6 +22,7 @@ const GameLogic = ({
   const [recentTaps, setRecentTaps] = useState([]);
   const [isPlaying, setIsPlaying] = useState(true);
   const [playbackDirection, setPlaybackDirection] = useState(0);
+  const [activeFingers, setActiveFingers] = useState(0);
 
   const vid = useRef();
   const vidRev = useRef();
@@ -65,7 +66,10 @@ const GameLogic = ({
   useEffect(() => {
     const handleTouch = (event) => {
       const activeTouches = event.touches.length;
-      console.log("lol: ", maxFingers)
+      if (activeFingers != activeTouches) {
+        setActiveFingers(activeTouches);
+      }
+      console.log("lol: ", maxFingers);
       if (activeTouches > maxFingers) {
         alert(`You're only allowed to use ${maxFingers} fingers`);
       }
@@ -76,7 +80,7 @@ const GameLogic = ({
     return () => {
       document.body.removeEventListener("touchstart", handleTouch);
     };
-  }, [maxFingers]);
+  }, [maxFingers, activeFingers]);
 
   const updateTapRate = () => {
     const currentTime = new Date().getTime();
@@ -253,6 +257,8 @@ const GameLogic = ({
       <GamePlay
         ref={refGlobe}
         // revRef={vidRev}
+        activeFingers={activeFingers}
+        maxFingers={maxFingers}
         love={love}
         loveHandler={loveHandler}
         setFlags={setFlags}

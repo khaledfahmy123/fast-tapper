@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TouchAppIcon from "@mui/icons-material/TouchApp";
+import AdsClickIcon from '@mui/icons-material/AdsClick';
 import StartIcon from "@mui/icons-material/Start";
 import { FileOpen } from "@mui/icons-material";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
@@ -115,7 +116,7 @@ export default function StartMenuLayout({
             alignItems: "flex-end",
           }}
         >
-          <TouchAppIcon sx={{ mr: 1, my: 0.5 }} color="primary" />
+          <AdsClickIcon sx={{ mr: 1, my: 0.5 }} color="primary" />
           <TextField
             id="input-with-sx"
             label="Minimum Rate Required"
