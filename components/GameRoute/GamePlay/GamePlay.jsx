@@ -165,7 +165,7 @@ const GamePlay = forwardRef(function GamePlay(props, ref) {
             {props.timer}
           </div>
           <div style={{
-            background:"white",
+            background:props.activeFingers <= props.maxFingers ? "white" : "#ff574a",
             fontSize: "22px",
             height: "fit-content",
             padding: "7px",
