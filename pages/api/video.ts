@@ -21,15 +21,16 @@ export default async function handler(
 ) {
   console.log("Inside Req");
   if (req.method === "POST") {
-    let uploadPath = "./uploads";
-    if (!existsSync(uploadPath)) {
-      mkdirSync(uploadPath, { recursive: true });
+    const dirPath = path.join(process.cwd(), "uploads");
+
+    if (!existsSync(dirPath)) {
+      mkdirSync(dirPath, { recursive: true });
       console.log("Directory created");
     } else {
       console.log("Directory already exists");
     }
     const form = new IncomingForm({
-      uploadDir: uploadPath,
+      uploadDir: dirPath,
       keepExtensions: true,
     });
 
