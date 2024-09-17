@@ -21,7 +21,7 @@ export default async function handler(
 ) {
   console.log("Inside Req");
   if (req.method === "POST") {
-    const dirPath = path.join(process.cwd(), "/public/uploads");
+    const dirPath = path.join("/temp", "uploads");
 
     if (!existsSync(dirPath)) {
       mkdirSync(dirPath, { recursive: true });
