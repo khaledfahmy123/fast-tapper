@@ -21,7 +21,7 @@ export default async function handler(
 ) {
   console.log("Inside Req");
   if (req.method === "POST") {
-    const dirPath = path.join("/temp", "uploads");
+    const dirPath = path.join("./uploads");
 
     if (!existsSync(dirPath)) {
       mkdirSync(dirPath, { recursive: true });
@@ -101,8 +101,6 @@ export default async function handler(
           console.log("Error: " + err.message);
         })
         .run();
-
-      // Reverse the video using FFmpeg
     });
   } else {
     res.status(405).json({ error: "Method not allowed" });
