@@ -7,6 +7,11 @@ import { existsSync, mkdirSync } from "fs";
 import path from "path";
 //@ts-ignore
 import archiver from "archiver";
+
+// const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
+
+// ffmpeg.setFfmpegPath(ffmpegPath);
+
 import { NextApiRequest, NextApiResponse } from "next";
 
 export const config = {
@@ -19,7 +24,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log("Inside Req");
+  const ffmpegPath = require("@ffmpeg-installer/ffmpeg");
+  console.log(ffmpegPath.path, ffmpegPath.version);
+  console.log("Inside Req: ", ffmpegPath);
   if (req.method === "POST") {
     const dirPath = path.join("/tmp");
 
