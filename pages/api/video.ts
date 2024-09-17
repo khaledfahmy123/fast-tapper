@@ -21,7 +21,7 @@ export default async function handler(
 ) {
   console.log("Inside Req");
   if (req.method === "POST") {
-    const dirPath = path.join("./uploads");
+    const dirPath = path.join("/temp");
 
     if (!existsSync(dirPath)) {
       mkdirSync(dirPath, { recursive: true });
@@ -44,8 +44,8 @@ export default async function handler(
       console.log("Hello inside ");
 
       const inputFile = files.file[0].filepath;
-      const outForward = path.join("./uploads", `forward_${Date.now()}.mp4`);
-      const outputFile = path.join("./uploads", `reverse_${Date.now()}.mp4`);
+      const outForward = path.join("/temp", `forward_${Date.now()}.mp4`);
+      const outputFile = path.join("/temp", `reverse_${Date.now()}.mp4`);
       console.log(inputFile);
 
       ffmpeg(inputFile) // Use the variable 'name' as the input file
