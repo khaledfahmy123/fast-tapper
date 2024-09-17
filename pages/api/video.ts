@@ -3,7 +3,7 @@ import ffmpeg from "fluent-ffmpeg";
 //@ts-ignore
 import { IncomingForm } from "formidable";
 import { promises as fs } from "fs";
-import { existsSync, mkdirSync } from "fs";
+import { existsSync, mkdirSync, createWriteStream } from "fs";
 import path from "path";
 //@ts-ignore
 import archiver from "archiver";
@@ -52,7 +52,9 @@ export default async function handler(
 
       const inputFile = files.file[0].filepath;
       const outForward = path.join("/tmp", `forward_${Date.now()}.mp4`);
+
       const outputFile = path.join("/tmp", `reverse_${Date.now()}.mp4`);
+
       console.log(inputFile);
 
       ffmpeg(inputFile) // Use the variable 'name' as the input file
@@ -61,17 +63,18 @@ export default async function handler(
           "-crf 28", // Compression setting
           "-preset ultrafast", // Encoding speed
         ])
-        .output(outForward) // Output file
+        .output(createWriteStream(outForward)) // Output file
         .on("end", async () => {
           console.log("Processing finished!");
           ffmpeg(outForward)
             .outputOptions([
               "-crf 28", // Compression setting
               "-preset ultrafast", // Encoding speed
+              "-bufsize 512k",
             ])
             .videoFilter("reverse") // Video reverse filter
             .audioFilter("areverse") // Audio reverse filter
-            .output(outputFile)
+            .output(createWriteStream(outputFile))
             .on("end", async () => {
               const fileReverseBuffer = await fs.readFile(outputFile);
               const fileForwardBuffer = await fs.readFile(outForward);
