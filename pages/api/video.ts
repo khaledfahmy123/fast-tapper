@@ -10,8 +10,6 @@ import archiver from "archiver";
 
 // const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 
-// ffmpeg.setFfmpegPath(ffmpegPath);
-
 import { NextApiRequest, NextApiResponse } from "next";
 
 export const config = {
@@ -27,6 +25,8 @@ export default async function handler(
   const ffmpegPath = require("@ffmpeg-installer/ffmpeg");
   console.log(ffmpegPath.path, ffmpegPath.version);
   console.log("Inside Req: ", ffmpegPath);
+
+  ffmpeg.setFfmpegPath(ffmpegPath.path);
   if (req.method === "POST") {
     const dirPath = path.join("/tmp");
 
