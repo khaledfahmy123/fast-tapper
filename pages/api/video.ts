@@ -89,10 +89,10 @@ export default async function handler(
 
               archive.pipe(res);
               archive.append(fileForwardBuffer, {
-                name: "forward.avi",
+                name: "forward.mp4",
               });
               archive.append(fileReverseBuffer, {
-                name: "reverse.avi",
+                name: "reverse.mp4",
               });
               archive.finalize();
 
