@@ -74,7 +74,7 @@ export default async function handler(
             ])
             .videoFilter("reverse") // Video reverse filter
             .audioFilter("areverse") // Audio reverse filter
-            .pipe(outputFile)
+            .output(outputFile)
             .on("end", async () => {
               const fileReverseBuffer = await fs.readFile(outputFile);
               const fileForwardBuffer = await fs.readFile(outForward);
