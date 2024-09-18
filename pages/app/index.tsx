@@ -124,8 +124,6 @@ const App = () => {
     );
 
     if (response.ok) {
-      setSpinning(false);
-
       const blob = await response.blob();
       const zip = new JSZip();
       const unzipped = await zip.loadAsync(blob);
@@ -136,6 +134,7 @@ const App = () => {
 
       saveVideoForSession(forwardVid, true);
       saveVideoForSession(reverseVid, false);
+      setSpinning(false);
       message.success("Run successfully, You're ready to start the game", 10);
       setStep(2);
     } else {
@@ -341,7 +340,7 @@ const App = () => {
       >
         Do it lol
       </Button> */}
-      <video src={videoUrl} controls></video>
+      {/* <video src={videoUrl} controls></video> */}
     </div>
   );
 };
