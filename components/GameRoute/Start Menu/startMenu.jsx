@@ -26,10 +26,10 @@ const StartMenu = ({
 
   // const videoStorage = vidRef(storage, `videos/`);
 
-  const startGame = (time, rtr) => {
+  const startGame = (time, rtr, algo) => {
     $(alert.current).animate({ opacity: 0 }, 300, () => {
       $(alert.current).css({ display: "none" });
-      passInput(time, rtr);
+      passInput(time, rtr, algo);
       setStart(true);
     });
   };

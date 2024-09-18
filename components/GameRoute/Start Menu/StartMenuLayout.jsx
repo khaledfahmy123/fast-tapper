@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TouchAppIcon from "@mui/icons-material/TouchApp";
-import AdsClickIcon from '@mui/icons-material/AdsClick';
+import AdsClickIcon from "@mui/icons-material/AdsClick";
 import StartIcon from "@mui/icons-material/Start";
 import { FileOpen } from "@mui/icons-material";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
@@ -26,21 +26,20 @@ export default function StartMenuLayout({
   const time = useRef();
   const rtr = useRef();
   const [minTapRate, setMinTapRate] = useState(5);
+  const [algo, setAlgo] = React.useState(0);
 
   const startHandler = (e) => {
     e.preventDefault();
-    startGame(time.current.value, rtr.current.value);
+    startGame(time.current.value, rtr.current.value, algo);
   };
 
-  const [age, setAge] = React.useState("");
-
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setAlgo(event.target.value);
   };
 
   useEffect(() => {
     setRequiredTapRate(minTapRate);
-    console.log(minTapRate)
+    console.log(minTapRate);
   }, [minTapRate]);
 
   return (
@@ -94,8 +93,8 @@ export default function StartMenuLayout({
             color="primary"
             labelId="demo-simple-select-standard-label"
             id="demo-simple-select-standard"
-            // value={age}
-            defaultValue="Algorithm"
+            value={algo}
+            defaultValue={0}
             onChange={handleChange}
             // variant="outlined"
             style={{
@@ -105,9 +104,9 @@ export default function StartMenuLayout({
               textAlign: "left",
             }}
           >
-            <MenuItem value={0}>Algorithm 1</MenuItem>
-            {/* <MenuItem value={1}>Algorithm 2</MenuItem> */}
-            {/* <MenuItem value={2}>Algorithm 3</MenuItem> */}
+            <MenuItem value={0}>Immediate Response Method</MenuItem>
+            <MenuItem value={1}>Rolling Average Method</MenuItem>
+            <MenuItem value={2}>Weighted Taps Method</MenuItem>
           </Select>
         </Box>
         <Box

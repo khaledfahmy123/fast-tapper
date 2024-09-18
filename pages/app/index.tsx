@@ -33,6 +33,7 @@ const App = () => {
   const [processor, setProcessor] = useState<string>("client");
   const ffmpeg = useRef<FFmpeg>();
   const currentFSls = useRef<string[]>([]);
+  const [videoUrl, setVideoUrl] = useState("");
 
   const router = useRouter();
 
@@ -60,6 +61,8 @@ const App = () => {
         "libx264",
         "-crf",
         "28",
+        // "-vf",
+        // "scale=1280:720",
         "-preset",
         "ultrafast",
         "forward.mp4"
@@ -175,6 +178,68 @@ const App = () => {
     }
   }, [fileList]);
 
+  // const handleSegementation = async () => {
+  //   assert(ffmpeg.current != undefined, "FFmpeg Hasn't Loaded");
+  //   // let ffmpeg =
+  //   ffmpeg.current.FS("writeFile", "input.mp4", await fetchFile(fileList[0]));
+
+  //   // Step 1: Split the video into 10-second chunks
+  //   await ffmpeg.current.run(
+  //     "-i",
+  //     "input.mp4",
+  //     "-c",
+  //     "copy",
+  //     "-f",
+  //     // "-vf",
+  //     // "scale=1280:720",
+  //     "segment",
+  //     "-segment_time",
+  //     "10",
+  //     "-reset_timestamps",
+  //     "1",
+  //     "-map",
+  //     "0",
+  //     "chunk%d.mp4"
+  //   );
+
+  //   // Get the chunk files
+  //   const chunkFiles = ffmpeg.current
+  //     .FS("readdir", ".")
+  //     .filter((file) => file.startsWith("chunk") && file.endsWith(".mp4"));
+
+  //   // Step 2: Reverse each chunk
+  //   for (let i = 0; i < chunkFiles.length; i++) {
+  //     const chunkName = chunkFiles[i];
+  //     const reversedName = `rev_${chunkName}`;
+  //     await ffmpeg.current.run("-i", chunkName, "-vf", "reverse", reversedName);
+  //   }
+
+  //   // Step 3: Concatenate reversed chunks
+  //   const concatList = "concat_list.txt";
+  //   const fileListContent = chunkFiles
+  //     .map((file) => `file 'rev_${file}'`)
+  //     .join("\n");
+  //   ffmpeg.current.FS("writeFile", concatList, fileListContent);
+
+  //   await ffmpeg.current.run(
+  //     "-f",
+  //     "concat",
+  //     "-safe",
+  //     "0",
+  //     "-i",
+  //     concatList,
+  //     "-c",
+  //     "copy",
+  //     "output.mp4"
+  //   );
+
+  //   // Step 4: Retrieve and prepare the final video for download
+  //   const data = ffmpeg.current.FS("readFile", "output.mp4");
+  //   const blob = new Blob([data.buffer], { type: "video/mp4" });
+  //   const url = URL.createObjectURL(blob);
+  //   setVideoUrl(url);
+  // };
+
   return (
     <div className="page-app">
       {spinning && (
@@ -268,7 +333,15 @@ const App = () => {
       >
         Go to game
       </Button>
-      {/* <video src={videoUrl} controls></video> */}
+      {/* <Button
+        type="primary"
+        onClick={() => {
+          handleSegementation();
+        }}
+      >
+        Do it lol
+      </Button> */}
+      <video src={videoUrl} controls></video>
     </div>
   );
 };

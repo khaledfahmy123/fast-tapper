@@ -14,6 +14,7 @@ const GameLogic = ({
   vidSrcForward,
   requiredTapRate,
   maxFingers,
+  algo,
 }) => {
   // State variables
   const [tapCount, setTapCount] = useState(0);
@@ -82,6 +83,10 @@ const GameLogic = ({
     };
   }, [maxFingers, activeFingers]);
 
+  useEffect(() => {
+    console.log("algo is ", algo);
+  }, [algo]);
+
   const updateTapRate = () => {
     const currentTime = new Date().getTime();
 
@@ -93,12 +98,38 @@ const GameLogic = ({
       recentTaps[recentTaps.length - 1] *
       Math.pow(decayRate, timeSinceLastUpdate);
 
-    // Method 1: Immediate Response with Decay
-    let newTapRate =
-      tapRateRef.current * Math.pow(decayRate, timeSinceLastUpdate);
-    if (recentTaps.length > 0) {
-      newTapRate = Math.max(newTapRate, recentTaps[recentTaps.length - 1]);
+    let newTapRate = 0;
+    console.log("algo is ", algo)
+    switch (algo) {
+      case 0:
+        newTapRate =
+          tapRateRef.current * Math.pow(decayRate, timeSinceLastUpdate);
+        if (recentTaps.length > 0) {
+          newTapRate = Math.max(newTapRate, recentTaps[recentTaps.length - 1]);
+        }
+        break;
+      case 1:
+        const rollingAverage =
+          recentTaps.reduce((a, b) => a + b, 0) / recentTaps.length;
+        newTapRate = rollingAverage || 0;
+        break;
+      default:
+        const weights = recentTaps.map((_, index) => index + 1);
+        const weightedSum = recentTaps.reduce((sum, rate, index) => sum + rate * weights[index], 0);
+        const weightSum = weights.reduce((a, b) => a + b, 0);
+        newTapRate = weightedSum / weightSum || 0;
     }
+    // Method 1: Immediate Response with Decay
+    // let newTapRate =
+    //   tapRateRef.current * Math.pow(decayRate, timeSinceLastUpdate);
+    // if (recentTaps.length > 0) {
+    //   newTapRate = Math.max(newTapRate, recentTaps[recentTaps.length - 1]);
+    // }
+
+    // Method 2
+    // const rollingAverage =
+    //   recentTaps.reduce((a, b) => a + b, 0) / recentTaps.length;
+    //  newTapRate = rollingAverage || 0;
 
     // Update state
     setTapRate(newTapRate);
@@ -280,22 +311,7 @@ const GameLogic = ({
               opacity: "0.4",
               overflow: "hidden",
             }}
-          >
-            {/* <ReactSpeedometer
-              startColor="tomato"
-              endColor="green"
-              needleColor={"#5959ac"}
-              minValue={0}
-              maxValue={100 / 100}
-              value={counter / 100}
-              customSegmentStops={[0, 0.4, 0.75, 1]}
-              segmentColors={["tomato", "orange", "green"]}
-              textColor={"#fff"}
-              needleTransitionDuration={100}
-              width={250}
-              ringWidth={15}
-            /> */}
-          </div>
+          ></div>
         }
         flag={[
           flagsPosition.map((e, i) => {

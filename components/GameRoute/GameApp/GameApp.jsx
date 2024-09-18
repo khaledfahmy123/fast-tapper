@@ -11,7 +11,8 @@ function GameApp() {
   const [maxFing, setMaxFing] = useState(2);
   const [time, setTime] = useState(0);
   const [start, setStart] = useState(false);
-  const [requiredTapRate, setRequiredTapRate] = useState(5)
+  const [requiredTapRate, setRequiredTapRate] = useState(5);
+  const [algo, setAlgo] = useState(0);
 
   const getVideoDuration = (videoUrl) => {
     return new Promise((resolve, reject) => {
@@ -59,9 +60,10 @@ function GameApp() {
       });
   };
 
-  const inputHandler = (time, maxFing) => {
+  const inputHandler = (time, maxFing, algo) => {
     setMaxFing(maxFing);
     setTime(time);
+    setAlgo(algo);
   };
 
   return (
@@ -91,6 +93,7 @@ function GameApp() {
         vidSrcForward={videoSrc}
         requiredTapRate={requiredTapRate}
         maxFingers={maxFing}
+        algo={algo}
       />
     </div>
   );
