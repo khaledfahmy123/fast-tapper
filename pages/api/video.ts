@@ -63,18 +63,18 @@ export default async function handler(
           "-crf 28", // Compression setting
           "-preset ultrafast", // Encoding speed
         ])
-        .output(createWriteStream(outForward)) // Output file
+        .output(outForward) // Output file
         .on("end", async () => {
           console.log("Processing finished!");
           ffmpeg(outForward)
             .outputOptions([
               "-crf 28", // Compression setting
               "-preset ultrafast", // Encoding speed
-              "-bufsize 512k",
+              //   "-bufsize 512k",
             ])
             .videoFilter("reverse") // Video reverse filter
             .audioFilter("areverse") // Audio reverse filter
-            .output(createWriteStream(outputFile))
+            .pipe(outputFile)
             .on("end", async () => {
               const fileReverseBuffer = await fs.readFile(outputFile);
               const fileForwardBuffer = await fs.readFile(outForward);
@@ -89,10 +89,10 @@ export default async function handler(
 
               archive.pipe(res);
               archive.append(fileForwardBuffer, {
-                name: "forward.mp4",
+                name: "forward.avi",
               });
               archive.append(fileReverseBuffer, {
-                name: "reverse.mp4",
+                name: "reverse.avi",
               });
               archive.finalize();
 
